@@ -5,10 +5,21 @@ public class CharacterMovement : MonoBehaviour
     public float speed = 5.0f;
     private Animator animator;
     private bool isGameOver = false;
+    public float jumpPower = 10f;
+    public Rigidbody2D rb;
+
+    // Biến cho Double Jump
+    public int maxJumps = 2;       // Số lần nhảy tối đa (Nhảy đơn + Nhảy kép)
+    private int currentJumps = 0;   // Số lần nhảy đã dùng
+    private float Move;
 
     void Start()
     {
         animator = GetComponent<Animator>(); // Lấy Animator
+        if (rb == null)
+        {
+            rb = GetComponent<Rigidbody2D>();
+        }
     }
 
     void Update()
@@ -20,15 +31,21 @@ public class CharacterMovement : MonoBehaviour
             return;
         }
 
+        Move = Input.GetAxis("Horizontal");
+        rb.velocity = new Vector2(speed * Move, rb.velocity.y);
 
-
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        bool isMoving = moveHorizontal != 0;
-        animator.SetBool("isMoving", isMoving);
-
-        if (isMoving)
+        // 2. LOGIC NHẢY KÉP (DOUBLE JUMP)
+        // Chỉ cho phép nhảy nếu currentJumps < maxJumps
+        if (Input.GetButtonDown("Jump") && currentJumps < maxJumps)
         {
-            transform.position += new Vector3(moveHorizontal * speed * Time.deltaTime, 0f, 0f);
+            // Reset vận tốc Y về 0 trước khi nhảy để đảm bảo lực nhảy nhất quán
+            rb.velocity = new Vector2(rb.velocity.x, 0f);
+
+            // Thực hiện nhảy với lực jumpPower
+            rb.velocity = new Vector2(rb.velocity.x, jumpPower);
+
+            // Tăng số lần nhảy đã thực hiện
+            currentJumps++;
         }
     }
 
@@ -41,5 +58,16 @@ public class CharacterMovement : MonoBehaviour
         // Dừng toàn bộ chuyển động trong game
         Time.timeScale = 0f;
 
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // Kiểm tra xem nhân vật có chạm vào mặt đất (có tag "Ground") hay không
+        // *Bạn phải đảm bảo rằng nền đất của bạn đã được đặt Tag là "Ground" trong Unity!*
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            // Reset số lần nhảy về 0 khi chạm đất
+            currentJumps = 0;
+        }
     }
 }

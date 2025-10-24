@@ -18,7 +18,7 @@ public class ScoreManager : MonoBehaviour
     {
         score += amount;
     }
-
+    // FORK
     void Start()
     {
         remainingTime = 30f; // để 3f khi test, còn 30f là thời gian thật
