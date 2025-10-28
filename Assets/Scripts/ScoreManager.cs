@@ -11,6 +11,7 @@ public class ScoreManager : MonoBehaviour
     public TextMeshProUGUI gameOverText;
     public TextMeshProUGUI scoreText;
     public CharacterMovement player;
+    public TextMeshProUGUI timerText;
 
     private bool isGameOver = false; // 👈 tránh gọi GameOver nhiều lần
 
@@ -34,6 +35,20 @@ public class ScoreManager : MonoBehaviour
         if (isGameOver && Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+        remainingTime -= Time.deltaTime;
+
+        if (remainingTime <= 0)
+        {
+            remainingTime = 0;
+            GameOver();
+        }
+
+        if (timerText != null)
+        {
+
+            timerText.text = "Time: " + Mathf.CeilToInt(remainingTime);
         }
     }
 
@@ -63,5 +78,18 @@ public class ScoreManager : MonoBehaviour
 
         Time.timeScale = 0f;
 
+    }
+
+    public void AddTime(float value)
+    {
+        remainingTime += value;
+
+        // Giới hạn để không âm hoặc quá cao
+        remainingTime = Mathf.Clamp(remainingTime, 0, 999);
+
+        if (value > 0)
+            Debug.Log("⏱️ + " + value + " giây!");
+        else
+            Debug.Log("⏱️ - " + Mathf.Abs(value) + " giây!");
     }
 }
