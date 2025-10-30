@@ -1,73 +1,122 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
 {
+    [Header("Di chuyển & Nhảy")]
     public float speed = 5.0f;
-    private Animator animator;
-    private bool isGameOver = false;
     public float jumpPower = 10f;
     public Rigidbody2D rb;
-
-    // Biến cho Double Jump
-    public int maxJumps = 2;       // Số lần nhảy tối đa (Nhảy đơn + Nhảy kép)
-    private int currentJumps = 0;   // Số lần nhảy đã dùng
+    private Animator animator;
+    private bool isGameOver = false;
     private float Move;
+
+    [Header("Double Jump")]
+    public int maxJumps = 2;       // Số lần nhảy tối đa (nhảy đơn + nhảy kép)
+    private int currentJumps = 0;  // Số lần nhảy đã dùng
+
+    [Header("Dash Settings")]
+    public float dashSpeed = 20f;        // tốc độ dash
+    public float dashDuration = 0.15f;   // thời gian dash (giây)
+    public float dashCooldown = 1f;      // thời gian hồi dash (giây)
+    private bool isDashing = false;      // đang dash hay không
+    private bool dashOnCooldown = false; // đang chờ hồi dash
+    private bool facingRight = true;     // hướng nhân vật
 
     void Start()
     {
-        animator = GetComponent<Animator>(); // Lấy Animator
+        animator = GetComponent<Animator>();
         if (rb == null)
-        {
             rb = GetComponent<Rigidbody2D>();
-        }
     }
 
     void Update()
     {
-        // Nếu Game Over thì không cho nhân vật di chuyển nữa
+        // Nếu Game Over thì không di chuyển
         if (isGameOver)
         {
             animator.SetBool("isMoving", false);
             return;
         }
 
+        // Nếu đang dash thì bỏ qua input di chuyển thường
+        if (isDashing) return;
+
+        // Di chuyển trái phải
         Move = Input.GetAxis("Horizontal");
         rb.velocity = new Vector2(speed * Move, rb.velocity.y);
 
-        // 2. LOGIC NHẢY KÉP (DOUBLE JUMP)
-        // Chỉ cho phép nhảy nếu currentJumps < maxJumps
+        // Cập nhật hướng nhân vật
+        if (Move > 0 && !facingRight)
+            Flip();
+        else if (Move < 0 && facingRight)
+            Flip();
+
+        // Animation di chuyển
+        animator.SetBool("isMoving", Move != 0);
+
+        // Nhảy / Double Jump
         if (Input.GetButtonDown("Jump") && currentJumps < maxJumps)
         {
-            // Reset vận tốc Y về 0 trước khi nhảy để đảm bảo lực nhảy nhất quán
             rb.velocity = new Vector2(rb.velocity.x, 0f);
-
-            // Thực hiện nhảy với lực jumpPower
             rb.velocity = new Vector2(rb.velocity.x, jumpPower);
-
-            // Tăng số lần nhảy đã thực hiện
             currentJumps++;
         }
+
+        // Dash bằng phím Shift
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !dashOnCooldown && !isDashing)
+        {
+            StartCoroutine(DoDash());
+        }
     }
 
-    // 👉 Hàm được gọi khi Game Over (từ ScoreManager hoặc script khác)
-    public void GameOver()
+    private IEnumerator DoDash()
     {
-        isGameOver = true; // Dừng nhân vật
-        animator.SetBool("isMoving", false);
+        isDashing = true;
+        dashOnCooldown = true;
 
-        // Dừng toàn bộ chuyển động trong game
-        Time.timeScale = 0f;
+        float originalGravity = rb.gravityScale;
+        rb.gravityScale = 0f;
 
+        // Xác định hướng dash (theo hướng đang quay mặt)
+        float dashDirection = facingRight ? 1f : -1f;
+        rb.velocity = new Vector2(dashDirection * dashSpeed, 0f);
+
+        // Có thể thêm hiệu ứng ở đây (ví dụ animator.SetTrigger("Dash");)
+        yield return new WaitForSeconds(dashDuration);
+
+        // Kết thúc dash, khôi phục trạng thái
+        rb.gravityScale = originalGravity;
+        isDashing = false;
+
+        // Đợi cooldown
+        yield return new WaitForSeconds(dashCooldown);
+        dashOnCooldown = false;
     }
 
+    // Đổi hướng nhân vật
+    private void Flip()
+    {
+        facingRight = !facingRight;
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
+    }
+
+    // Khi chạm đất reset số lần nhảy
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Kiểm tra xem nhân vật có chạm vào mặt đất (có tag "Ground") hay không
-        // *Bạn phải đảm bảo rằng nền đất của bạn đã được đặt Tag là "Ground" trong Unity!*
         if (collision.gameObject.CompareTag("Ground"))
         {
-            // Reset số lần nhảy về 0 khi chạm đất
             currentJumps = 0;
         }
+    }
+
+    // Khi Game Over
+    public void GameOver()
+    {
+        isGameOver = true;
+        animator.SetBool("isMoving", false);
+        Time.timeScale = 0f;
     }
 }

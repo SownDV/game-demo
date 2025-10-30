@@ -275,7 +275,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &20259404
 Transform:
   m_ObjectHideFlags: 0
@@ -404,6 +404,7 @@ GameObject:
   - component: {fileID: 242165758}
   - component: {fileID: 242165759}
   - component: {fileID: 242165760}
+  - component: {fileID: 242165761}
   m_Layer: 0
   m_Name: GemSpawner
   m_TagString: Untagged
@@ -538,6 +539,21 @@ MonoBehaviour:
   speedBoostPrefab: {fileID: 8225941052831361757, guid: ae332e79a21513749812743c4e22670c, type: 3}
   spawnInterval: 5
   heightOffset: 1
+--- !u!114 &242165761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242165754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d900e0c12f4918d418b0051cead37072, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeBonusPrefab: {fileID: 6952131485167893429, guid: 3e09fd646917bfc40a6c77a67d93e476, type: 3}
+  spawnInterval: 5
+  heightOffset: 1
 --- !u!1 &270424522
 GameObject:
   m_ObjectHideFlags: 0
@@ -624,7 +640,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &343203577
 Transform:
   m_ObjectHideFlags: 0
@@ -1018,6 +1034,7 @@ MonoBehaviour:
   gameOverText: {fileID: 1965159164}
   scoreText: {fileID: 10609743}
   player: {fileID: 1247719995}
+  timerText: {fileID: 0}
 --- !u!212 &736796291
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1244,7 +1261,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1196327122
 Transform:
   m_ObjectHideFlags: 0
@@ -1397,6 +1414,17 @@ MonoBehaviour:
   jumpPower: 12
   rb: {fileID: 1247719999}
   maxJumps: 2
+  dashSpeed: 20
+  dashDuration: 0.15
+  dashCooldown: 1
+  wallSlideSpeed: 2
+  wallJumpForce: 10
+  wallJumpHorizontalForce: 8
+  wallCheck: {fileID: 0}
+  wallCheckDistance: 0.3
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!95 &1247719996
 Animator:
   serializedVersion: 5
@@ -1646,7 +1674,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1320686210
 Transform:
   m_ObjectHideFlags: 0
@@ -2045,7 +2073,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1694312168
 Transform:
   m_ObjectHideFlags: 0
@@ -2281,7 +2309,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1827263718
 Transform:
   m_ObjectHideFlags: 0
