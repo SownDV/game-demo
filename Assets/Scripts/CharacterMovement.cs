@@ -82,11 +82,12 @@ public class CharacterMovement : MonoBehaviour
         float dashDirection = facingRight ? 1f : -1f;
         rb.velocity = new Vector2(dashDirection * dashSpeed, 0f);
 
-        // Có thể thêm hiệu ứng ở đây (ví dụ animator.SetTrigger("Dash");)
+        // Có thể thêm hiệu ứng ở đây 
         yield return new WaitForSeconds(dashDuration);
 
         // Kết thúc dash, khôi phục trạng thái
         rb.gravityScale = originalGravity;
+        rb.velocity = new Vector2(0, 0);
         isDashing = false;
 
         // Đợi cooldown

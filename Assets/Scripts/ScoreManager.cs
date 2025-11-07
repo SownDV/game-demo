@@ -22,7 +22,7 @@ public class ScoreManager : MonoBehaviour
     // FORK
     void Start()
     {
-        remainingTime = 30f; // để 3f khi test, còn 30f là thời gian thật
+        remainingTime = 60f; // để 3f khi test, còn 30f là thời gian thật
         StartCoroutine(CountdownTimer());
     }
 
