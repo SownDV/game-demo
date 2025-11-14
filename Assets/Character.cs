@@ -7,4 +7,5 @@ public class Character
 {
     public string CharacterName;
     public Sprite CharacterSprite;
+    public GameObject CharacterPrefab;
 }

@@ -15,7 +15,10 @@ MonoBehaviour:
   characters:
   - CharacterName: 007
     CharacterSprite: {fileID: 21300000, guid: 80e00eb3f1505f24b927506c1b09ccc9, type: 3}
+    CharacterPrefab: {fileID: 8177026354458818105, guid: a0170452a3a4f494e9d9a7a55e440884, type: 3}
   - CharacterName: 004
     CharacterSprite: {fileID: 21300000, guid: 9e9a7559801f0104ea9baf540c901201, type: 3}
+    CharacterPrefab: {fileID: 8177026354458818105, guid: 077dde2888186854dab786c9e975a3e4, type: 3}
   - CharacterName: 005
     CharacterSprite: {fileID: 21300000, guid: 288209a4944a2b24f9fc1e74ad61ff60, type: 3}
+    CharacterPrefab: {fileID: 8177026354458818105, guid: 5152751a35ec07e4cbf245c068b3419f, type: 3}

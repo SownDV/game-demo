@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,72 +7,38 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+/// <summary>
+/// Handle Character spawn when start level
+/// </summary>
 public class CharacterManager : MonoBehaviour
 {
+    public const string SelectionKey = "selectionOption";
     // Start is called before the first frame update
+    public Transform m_SpawnPoint;
     public CharacterDatabase charracterDB;
-    public TextMeshProUGUI nameText;
-    public SpriteRenderer artworkImage;
-
     private int selectedOption = 0;
+    private CharacterMovement currentPlayer;
 
     void Start()
     {
-        if (!PlayerPrefs.HasKey("selectionOption"))
+        selectedOption = PlayerPrefs.GetInt(SelectionKey, 0);
+        SpawnCharacter();
+    }
+
+    private void SpawnCharacter()
+    {
+        var find = charracterDB.GetCharacter(selectedOption);
+        if (find != null)
         {
-            selectedOption = 0;
+            currentPlayer = Instantiate(find.CharacterPrefab, m_SpawnPoint.position, Quaternion.identity).GetComponent<CharacterMovement>();
         }
+    }
 
-        else
+    public void GameOver()
+    {
+        if (currentPlayer != null)
         {
-            Load();
+            currentPlayer.GameOver();
         }
-        UpdateCharacter(selectedOption);
-    }
-
-    public void NextOption()
-    {
-        selectedOption++;
-        if (selectedOption >= charracterDB.characterCount)
-        {
-            selectedOption = 0;
-        }
-
-        UpdateCharacter(selectedOption);
-        Save();
-    }
-
-    public void BackOption()
-    {
-        selectedOption--;
-        if (selectedOption < 0)
-        {
-            selectedOption = charracterDB.characterCount - 1;
-        }
-
-        UpdateCharacter(selectedOption);
-        Save();
-    }
-
-    private void UpdateCharacter(int selectedOption)
-    {
-        Character character = charracterDB.GetCharacter(selectedOption);
-        artworkImage.sprite = character.CharacterSprite;
-        nameText.text = character.CharacterName;
-    }
-
-    private void Load()
-    {
-        selectedOption = PlayerPrefs.GetInt("selectedOption");
-    }
-
-    private void Save()
-    {
-        PlayerPrefs.SetInt("selectedOption", selectedOption);
-    }
-
-    private void ChangeScence(int sceneID)
-    {
-        SceneManager.LoadScene(sceneID);
     }
 }

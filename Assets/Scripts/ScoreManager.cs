@@ -10,7 +10,7 @@ public class ScoreManager : MonoBehaviour
     public GameObject gameOverPanel;
     public TextMeshProUGUI gameOverText;
     public TextMeshProUGUI scoreText;
-    public CharacterMovement player;
+    public CharacterManager player;
     public TextMeshProUGUI timerText;
 
     private bool isGameOver = false; // 👈 tránh gọi GameOver nhiều lần
